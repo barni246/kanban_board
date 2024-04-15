@@ -14,31 +14,18 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-# from django.contrib import admin
-# from django.urls import path
-# from board.views import TaskListView,LoginView,TaskDetailView,CustomLoginView
-
-# urlpatterns = [
-#     path('admin/', admin.site.urls),
-#     path('tasks/', TaskListView.as_view(), name='task-list'),
-#     path('tasks/<int:pk>/', TaskDetailView.as_view(), name='task-detail'),
-#     path('login/', CustomLoginView.as_view(), name='login'),
-# ]
 
 
 from django.contrib import admin
 from django.urls import path
-from board.views import TaskListView, TaskDetailView, CustomLoginView,TaskDetailDropView
+from board.views import TaskListView, TaskDetailView, CustomLoginView,TaskDetailDropView,UserIdByUsernameView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('tasks/', TaskListView.as_view(), name='task-list'),
-    # path('tasks/<int:pk>/', TaskDetailDropView.as_view(), name='task-detail-drop'),
-    # path('tasks/<int:pk>/', TaskDetailView.as_view(), name='task-detail'),
-    
+    path('user_id_by_username/<str:username>/', UserIdByUsernameView.as_view(), name='user-id-by-username'),
     path('tasks/drop/<int:pk>/', TaskDetailDropView.as_view(), name='task-detail-drop'),
     path('tasks/detail/<int:pk>/', TaskDetailView.as_view(), name='task-detail'),
-    
     path('login/', CustomLoginView.as_view(), name='login'),
 ]
 
