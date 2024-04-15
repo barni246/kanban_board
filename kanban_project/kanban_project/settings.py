@@ -26,16 +26,18 @@ SECRET_KEY = 'django-insecure-bf+bv3ua=#(!bkt$bm3-w7@_y!o_6w%@_m=27tmg4!5&4ml65s
 DEBUG = True
 
 
+ALLOWED_HOSTS = [
+    
+]
 
-ALLOWED_HOSTS = []
+
+# CORS_ORIGIN_ALLOW_ALL = False
 
 
-# CORS_ORIGIN_WHITELIST = [
-#     'http://127.0.0.1:5500',
-# 
-# ]
-
-CORS_ALLOW_ALL_ORIGINS = True   
+CORS_ORIGIN_WHITELIST = [
+    'http://127.0.0.1:5500',
+    
+]
 
 
 # Application definition
@@ -48,6 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
      'rest_framework', 
+     'rest_framework.authtoken',
      'board', 
      'corsheaders', 
 ]
@@ -145,3 +148,6 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ]
 }
+
+
+
