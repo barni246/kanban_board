@@ -18,7 +18,7 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
-from board.views import TaskListView, TaskDetailView, CustomLoginView,TaskDetailDropView,UserIdByUsernameView,logout_view
+from board.views import TaskListView, TaskDetailView, CustomLoginView,TaskDetailDropView,UserIdByUsernameView,logout_view,create_user
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,6 +28,7 @@ urlpatterns = [
     path('tasks/detail/<int:pk>/', TaskDetailView.as_view(), name='task-detail'),
     path('login/', CustomLoginView.as_view(), name='login'),
     path('logout/', logout_view, name='logout'),
+    path('create_user/', create_user, name='create_user'),
 ]
 
 

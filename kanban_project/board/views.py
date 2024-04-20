@@ -22,6 +22,27 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
 
+@api_view(['POST'])
+def create_user(request):
+    if request.method == 'POST':
+        username = request.data.get('newUsername')
+        password = request.data.get('newPassword')
+        email = request.data.get('newEmail')
+        if not username:
+            return Response({'error': 'Username is required'}, status=status.HTTP_400_BAD_REQUEST)
+        if User.objects.filter(username=username).exists():
+            return Response({'error': 'Username already exists'}, status=status.HTTP_400_BAD_REQUEST)
+        if email:
+            if User.objects.filter(email=email).exists():
+                return Response({'error': 'Email already exists!'}, status=status.HTTP_400_BAD_REQUEST)
+        if not password:
+            return Response({'error': 'Password is required!'}, status=status.HTTP_400_BAD_REQUEST)
+        user = User.objects.create_user(username=username, password=password, email=email)
+        return Response({'user_id': user.id, 'username': user.username, 'email': user.email}, status=status.HTTP_201_CREATED)
+    else:
+        return Response({'error': 'Error 405'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
 
 class CustomLoginView(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
