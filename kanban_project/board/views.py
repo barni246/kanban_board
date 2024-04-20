@@ -19,6 +19,7 @@ from rest_framework import authentication, permissions
 from django.shortcuts import redirect
 from django.contrib.auth import logout
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 
 
@@ -85,7 +86,7 @@ class TaskDetailDropView(RetrieveUpdateAPIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
+@csrf_exempt
 def logout_view(request):
     print('request',request)
     if request.method == 'POST':
