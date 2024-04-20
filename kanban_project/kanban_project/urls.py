@@ -18,7 +18,7 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
-from board.views import TaskListView, TaskDetailView, CustomLoginView,TaskDetailDropView,UserIdByUsernameView
+from board.views import TaskListView, TaskDetailView, CustomLoginView,TaskDetailDropView,UserIdByUsernameView,logout_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,7 +27,10 @@ urlpatterns = [
     path('tasks/drop/<int:pk>/', TaskDetailDropView.as_view(), name='task-detail-drop'),
     path('tasks/detail/<int:pk>/', TaskDetailView.as_view(), name='task-detail'),
     path('login/', CustomLoginView.as_view(), name='login'),
+    path('logout/', logout_view, name='logout'),
 ]
+
+
 
 # function fetchTasks() {
 #     const token = localStorage.getItem('token');

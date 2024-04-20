@@ -16,6 +16,10 @@ from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework import authentication, permissions
+from django.shortcuts import redirect
+from django.contrib.auth import logout
+from django.http import JsonResponse
+
 
 
 class CustomLoginView(ObtainAuthToken):
@@ -25,6 +29,7 @@ class CustomLoginView(ObtainAuthToken):
         user = serializer.validated_data['user']
         token, created = Token.objects.get_or_create(user=user)
         return Response({'token': token.key})
+
 
 class UserIdByUsernameView(APIView):
     def get(self, request, username):
@@ -81,10 +86,13 @@ class TaskDetailDropView(RetrieveUpdateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-
-
-
+def logout_view(request):
+    print('request',request)
+    if request.method == 'POST':
+        logout(request)
+        return JsonResponse({'message': 'Logout successful'})
+    else:
+        return JsonResponse({'error': 'Invalid method'}, status=405)
 
 
 
