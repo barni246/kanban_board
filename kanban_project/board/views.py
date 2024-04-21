@@ -1,22 +1,18 @@
-from django.shortcuts import render
 from rest_framework import generics
 from .models import Task
 from .serializers import TaskSerializer
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
-from django.contrib.auth import authenticate
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from rest_framework import status
-from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework import authentication, permissions
-from django.shortcuts import redirect
 from django.contrib.auth import logout
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -127,6 +123,22 @@ def logout_view(request):
         return JsonResponse({'message': 'Logout successful'})
     else:
         return JsonResponse({'error': 'Invalid method'}, status=405)
+
+
+
+def get_task_details(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+    created_by_username = task.created_by.username
+    data = {
+        'title': task.title,
+        'description': task.description,
+        'column': task.column,
+        'task_index': task.task_index,
+        'created_by': created_by_username,
+        'created_at': task.created_at,
+        'updated_at': task.updated_at
+    }
+    return JsonResponse(data)
 
 
 
