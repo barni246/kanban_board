@@ -46,32 +46,4 @@ urlpatterns = [
     path('logout/', logout_view, name='logout'),
     path('create_user/', CreateUserView.as_view(), name='CreateUserView'),
     path('tasks/<int:task_id>/', get_task_details, name='task_details'),
-
-
 ]
-
-
-
-# function fetchTasks() {
-#     const token = localStorage.getItem('token');
-#     if (!token) {
-#         console.error('Token not found in localStorage');
-#         return;
-#     }
-
-#     fetch('http://127.0.0.1:8000/tasks/', {
-#         method: 'GET',
-#         headers: {
-#             'Content-Type': 'application/json',
-#             'Authorization': `Bearer ${token}` // Verwenden Sie das Token im Authorization-Header
-#         }
-#     })
-#     .then(response => response.json())
-#     .then(data => {
-#         // Verarbeiten Sie die Antwort vom Server
-#         console.log('Tasks:', data);
-#     })
-#     .catch(error => {
-#         console.error('Error fetching tasks:', error);
-#     });
-# }
