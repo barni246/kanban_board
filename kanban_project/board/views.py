@@ -1,4 +1,3 @@
-
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -15,9 +14,16 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 
 
-"""
-Hier wird ein User erstellt
-"""
+class CustomLoginView(ObtainAuthToken):
+    
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({'token': token.key})
+
+
 class CreateUserView(APIView):
     
     def post(self, request):
@@ -36,35 +42,10 @@ class CreateUserView(APIView):
         return Response({'user_id': user.id, 'username': user.username, 'email': user.email}, status=status.HTTP_201_CREATED)
 
 
-"""
-Hier wird der Benutzer validiert und wird ein Token zurückgegeben
-"""
-class CustomLoginView(ObtainAuthToken):
-    def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data, context={'request': request})
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
-        token, created = Token.objects.get_or_create(user=user)
-        return Response({'token': token.key})
-
-
-"""
-Hier wird nach User Name  das Feld identifiziert und
-User ID extrahiert und als Response an Frontend geschickt
-"""
-class UserIdByUsernameView(APIView):
-    def get(self,request,username):
-        try:
-            user = User.objects.get(username=username)
-            return Response({'user_id': user.pk})
-        except User.DoesNotExist:
-            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
-
-
-class TaskListView(APIView):
+class TaskCRUDView(APIView):
     authentication_classes = [authentication.TokenAuthentication]
-    # permission_classes = [permissions.IsAuthenticated]
-
+    permission_classes = [permissions.IsAuthenticated]
+    
     def get(self, request):
         tasks = Task.objects.all()
         serializer = TaskSerializer(tasks, many=True)
@@ -77,11 +58,6 @@ class TaskListView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-class TaskDetailView(APIView):
-    authentication_classes = [authentication.TokenAuthentication]
-    # permission_classes = [permissions.IsAuthenticated]
-
     def delete(self, request, pk):
         try:
             task = Task.objects.get(pk=pk)
@@ -89,11 +65,7 @@ class TaskDetailView(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Task.DoesNotExist:
             return Response({"error": "Task not found"}, status=status.HTTP_404_NOT_FOUND)
-
-
-class TaskDetailDropView(APIView):
-    authentication_classes = [authentication.TokenAuthentication]
-    # permission_classes = [permissions.IsAuthenticated]
+         
     def put(self, request, pk):
         task = get_object_or_404(Task, pk=pk)
         serializer = TaskSerializer(instance=task, data=request.data, partial=True)
@@ -103,17 +75,13 @@ class TaskDetailDropView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class TaskDetailEdit(APIView):
-    authentication_classes = [authentication.TokenAuthentication]
-    # permission_classes = [permissions.IsAuthenticated]
-
-    def put(self, request, pk):
-        task = get_object_or_404(Task, pk=pk)
-        serializer = TaskSerializer(instance=task, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class UserIdByUsernameView(APIView):
+    def get(self,request,username):
+        try:
+            user = User.objects.get(username=username)
+            return Response({'user_id': user.pk})
+        except User.DoesNotExist:
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
 
 
 @csrf_exempt
@@ -125,17 +93,11 @@ def logout_view(request):
         return JsonResponse({'error': 'Invalid method'}, status=405)
 
 
-def get_task_details(request, task_id):
+def  get_task_created_by(request, task_id):
     task = get_object_or_404(Task, id=task_id)
     created_by_username = task.created_by.username
     data = {
-        'title': task.title,
-        'description': task.description,
-        'column': task.column,
-        'task_index': task.task_index,
         'created_by': created_by_username,
-        'created_at': task.created_at,
-        'updated_at': task.updated_at
     }
     return JsonResponse(data)
 

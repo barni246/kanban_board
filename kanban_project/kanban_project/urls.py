@@ -18,32 +18,24 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
-# from board.views import TaskListView, TaskDetailView, CustomLoginView,TaskDetailDropView,UserIdByUsernameView,logout_view,create_user,TaskDetailEdit,get_task_details
-
-
 from board.views import (
-    TaskListView,
-    TaskDetailView,
+    TaskCRUDView,
     CustomLoginView,
-    TaskDetailDropView,
     UserIdByUsernameView,
     logout_view,
     CreateUserView, 
-    TaskDetailEdit,
-    get_task_details
+     get_task_created_by
 )
-
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('tasks/', TaskListView.as_view(), name='task-list'),
-    path('user_id_by_username/<str:username>/', UserIdByUsernameView.as_view(), name='user-id-by-username'),
-    path('tasks/drop/<int:pk>/', TaskDetailDropView.as_view(), name='task-detail-drop'),
-    path('tasks/detail/<int:pk>/', TaskDetailView.as_view(), name='task-detail'),
-    path('tasks/edit/<int:pk>/', TaskDetailEdit.as_view(), name='task-detail'),
     path('login/', CustomLoginView.as_view(), name='login'),
-    path('logout/', logout_view, name='logout'),
     path('create_user/', CreateUserView.as_view(), name='CreateUserView'),
-    path('tasks/<int:task_id>/', get_task_details, name='task_details'),
+    path('logout/', logout_view, name='logout'),
+    path('tasks/', TaskCRUDView.as_view(), name='task-list'),
+    path('tasks/<int:task_id>/', get_task_created_by, name='task-details'),
+    path('tasks/crud/<int:pk>/', TaskCRUDView.as_view(), name='task-crud'),
+    path('user_id_by_username/<str:username>/', UserIdByUsernameView.as_view(), name='user-id-by-username'),
+    
 ]
