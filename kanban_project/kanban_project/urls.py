@@ -23,7 +23,7 @@ from board.views import (
     UserIdByUsernameView,
     logout_view,
     CreateUserView, 
-     get_task_created_by,
+     get_task,
      TaskView,
      TaskUpdateView
 )
@@ -35,7 +35,7 @@ urlpatterns = [
     path('create_user/', CreateUserView.as_view(), name='CreateUserView'),
     path('logout/', logout_view, name='logout'),
     path('tasks/', TaskView.as_view(), name='task-list'),
-    path('tasks/<int:task_id>/', get_task_created_by, name='task-details'),
+    path('tasks/<int:task_id>/', get_task, name='task-details'),
     path('tasks/update/<int:pk>/', TaskUpdateView.as_view(), name='task-update-delete'),
     path('user_id_by_username/<str:username>/', UserIdByUsernameView.as_view(), name='user-id-by-username'),
     
