@@ -1,12 +1,11 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 from .models import Task
 from .serializers import TaskSerializer
 from django.shortcuts import get_object_or_404
-from rest_framework import authentication, permissions
+from rest_framework import authentication, permissions, status
 from django.contrib.auth import logout
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -40,23 +39,6 @@ class CreateUserView(APIView):
             return Response({'error': 'Password is required!'}, status=status.HTTP_400_BAD_REQUEST)
         user = User.objects.create_user(username=username, password=password, email=email)
         return Response({'user_id': user.id, 'username': user.username, 'email': user.email}, status=status.HTTP_201_CREATED)
-
-# class TaskView(APIView):
-#     authentication_classes = [authentication.TokenAuthentication]
-#     permission_classes = [permissions.IsAuthenticated]
-    
-#     def get(self, request):
-#         tasks = Task.objects.all()
-#         serializer = TaskSerializer(tasks, many=True)
-#         return Response(serializer.data)
-
-#     def post(self, request):
-#         serializer = TaskSerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 class TaskView(APIView):
