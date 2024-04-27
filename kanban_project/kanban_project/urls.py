@@ -19,12 +19,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from board.views import (
-    TaskCRUDView,
     CustomLoginView,
     UserIdByUsernameView,
     logout_view,
     CreateUserView, 
-     get_task_created_by
+     get_task_created_by,
+     TaskView,
+     TaskUpdateView
 )
 
 
@@ -33,9 +34,9 @@ urlpatterns = [
     path('login/', CustomLoginView.as_view(), name='login'),
     path('create_user/', CreateUserView.as_view(), name='CreateUserView'),
     path('logout/', logout_view, name='logout'),
-    path('tasks/', TaskCRUDView.as_view(), name='task-list'),
+    path('tasks/', TaskView.as_view(), name='task-list'),
     path('tasks/<int:task_id>/', get_task_created_by, name='task-details'),
-    path('tasks/crud/<int:pk>/', TaskCRUDView.as_view(), name='task-crud'),
+    path('tasks/update/<int:pk>/', TaskUpdateView.as_view(), name='task-update-delete'),
     path('user_id_by_username/<str:username>/', UserIdByUsernameView.as_view(), name='user-id-by-username'),
     
 ]
