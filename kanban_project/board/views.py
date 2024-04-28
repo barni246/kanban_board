@@ -60,7 +60,22 @@ class TaskView(APIView):
 
 class TaskUpdateView(APIView):
     authentication_classes = [authentication.TokenAuthentication]
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
+    
+    def get(self, request, pk):
+        task = Task.objects.get(pk=pk)
+        created_by_username = task.created_by.username
+        data = {
+         'title': task.title,
+         'description': task.description,
+         'column': task.column,
+         'task_index': task.task_index,
+         'created_by': created_by_username,
+         'created_at': task.created_at,
+         'updated_at': task.updated_at
+              }
+        return JsonResponse(data)
+
 
     def delete(self, request, pk):
         try:
@@ -97,19 +112,7 @@ def logout_view(request):
         return JsonResponse({'error': 'Invalid method'}, status=405)
 
 
-def  get_task(request, task_id):
-    task = get_object_or_404(Task, id=task_id)
-    created_by_username = task.created_by.username
-    data = {
-         'title': task.title,
-         'description': task.description,
-         'column': task.column,
-         'task_index': task.task_index,
-         'created_by': created_by_username,
-         'created_at': task.created_at,
-         'updated_at': task.updated_at
-    }
-    return JsonResponse(data)
+
 
 
 
