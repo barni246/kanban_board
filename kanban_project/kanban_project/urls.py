@@ -23,8 +23,8 @@ from board.views import (
     UserIdByUsernameView,
     logout_view,
     CreateUserView, 
-     TaskView,
-     TaskUpdateView
+    TaskView,
+    TaskUpdateView
 )
 
 
